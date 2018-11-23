@@ -1,0 +1,31 @@
+{
+    "name": "rindow/rindow-stdlib",
+    "type": "library",
+    "description": "Standard library for the rindow framework",
+    "keywords": ["rindow","rindow-framework","stdlib"],
+    "license": "BSD-3-Clause",
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "rindow/rindow-container": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Rindow\\Stdlib\\": "src/"
+        }
+    },
+
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://rindow.github.io/rindow-packagist/packages.json",
+            "options": {
+                "ssl": {
+                    "verify_peer": "true"
+                }
+            }
+        }
+    ],
+    "minimum-stability": "dev"
+}

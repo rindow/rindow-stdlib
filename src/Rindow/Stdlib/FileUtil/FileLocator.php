@@ -65,7 +65,7 @@ class FileLocator
                         $fullfilename = realpath($fullfilename);
                         $className = substr($fullfilename,strlen($realpath)+1);
                         $className = substr($className,0,strlen($className)-strlen($fileExtension));
-                        $className = $namespace.'\\'.$className;
+                        $className = $namespace.'\\'.str_replace('/', '\\', $className);
                         return $className;
                 }));
             }

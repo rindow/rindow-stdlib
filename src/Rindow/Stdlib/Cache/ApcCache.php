@@ -7,27 +7,37 @@ class ApcCache implements ArrayAccess
 {
     protected $cachePath;
     protected $timeOut = 360; // 360 seconds = 10 minute.
+    protected $apc;
 
     public static function isReady()
     {
-        return extension_loaded('apc');
+        return extension_loaded('apcu') || extension_loaded('apc');
     }
 
     public static function clear($cacheType)
     {
         if($cacheType===null)
             $cacheType = 'user';
-        apc_clear_cache($cacheType);
+        if(extension_loaded('apcu'))
+            apcu_clear_cache();
+        elseif(extension_loaded('apc'))
+            apc_clear_cache($cacheType);
+        else
+            throw new Exception\DomainException('apc or apcu extension is not loaded.');
     }
 
     public function __construct($cachePath=null, $timeOut=null)
     {
-    	if(!extension_loaded('apc'))
-    		throw new Exception\DomainException('apc extension is not loaded.');
+        if(extension_loaded('apcu'))
+            $this->apc = new Apcu();
+        elseif(extension_loaded('apc'))
+            $this->apc = new Apc();
+        else
+            throw new Exception\DomainException('apc or apcu extension is not loaded.');
         if($cachePath!==null)
-	        $this->setCachePath($cachePath);
+            $this->setCachePath($cachePath);
         if($timeOut!==null)
-	        $this->setTimeOut($timeOut);
+            $this->setTimeOut($timeOut);
     }
     
     public function setCachePath($cachePath)
@@ -50,26 +60,26 @@ class ApcCache implements ArrayAccess
     public function offsetExists($offset)
     {
         $key = $this->cachePath . '/' . $offset;
-        return apc_exists($key);
+        return $this->apc->exists($key);
     }
 
     public function offsetGet($offset)
     {
         $key = $this->cachePath . '/' . $offset;
-        return apc_fetch($key);
+        return $this->apc->fetch($key);
     }
 
     public function offsetSet($offset,$value)
     {
         $key = $this->cachePath . '/' . $offset;
-        apc_store($key, $value, $this->timeOut);
+        $this->apc->store($key, $value, $this->timeOut);
         return $this;
     }
 
     public function offsetUnset($offset)
     {
         $key = $this->cachePath . '/' . $offset;
-		apc_delete($key);
+        $this->apc->delete($key);
         return $this;
     }
 
@@ -82,7 +92,7 @@ class ApcCache implements ArrayAccess
     {
         $key = $this->cachePath . '/' . $offset;
         $success = false;
-        $value = apc_fetch($key,$success);
+        $value = $this->apc->fetch($key,$success);
         if($success)
             return $value;
         if($callback==null)
@@ -90,7 +100,7 @@ class ApcCache implements ArrayAccess
         $value = $default;
         $args = array($this, $offset, &$value);
         if(call_user_func_array($callback,$args)) {
-            apc_store($key, $value, $this->timeOut);
+            $this->apc->store($key, $value, $this->timeOut);
         }
         return $value;
     }
@@ -99,10 +109,10 @@ class ApcCache implements ArrayAccess
     {
         $key = $this->cachePath . '/' . $offset;
         if($addMode) {
-            apc_add($key, $value, $this->timeOut);
+            $this->apc->add($key, $value, $this->timeOut);
             return $this;
         }
-        apc_store($key, $value, $this->timeOut);
+        $this->apc->store($key, $value, $this->timeOut);
         return $this;
     }
 

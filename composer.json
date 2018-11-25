@@ -2,7 +2,7 @@
     "name": "rindow/rindow-stdlib",
     "type": "library",
     "description": "Standard library for the rindow framework",
-    "keywords": ["rindow","rindow-framework","stdlib"],
+    "keywords": ["rindow","framework","stdlib"],
     "license": "BSD-3-Clause",
     "require": {
         "php": ">=5.3.3"

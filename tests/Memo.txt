@@ -1,0 +1,19 @@
+$forceFileCache
+Aop
+	AopManager
+		aspectCache
+	AdviceManager
+		repositoryCache
+	Intercept\CodeStore\CacheStorage
+		cache
+	PointcutManager
+		pointcutsCache(Will save at last only)
+Container
+	ComponentDefinitionManager
+		scannedComponentCache
+	ModuleManager
+		versionCache
+
+$configCacheFactory->getFileCache()
+Aop
+	Intercept\CodeStore\Filesystem

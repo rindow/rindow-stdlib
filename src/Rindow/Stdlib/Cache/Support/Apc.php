@@ -1,5 +1,5 @@
 <?php
-namespace Rindow\Stdlib\Cache;
+namespace Rindow\Stdlib\Cache\Support;
 
 class Apc
 {
@@ -31,5 +31,10 @@ class Apc
     public function delete($key)
     {
         return apc_delete($key);
+    }
+
+    public function clear($cache_type='')
+    {
+        return apc_clear_cache($cache_type);
     }
 }

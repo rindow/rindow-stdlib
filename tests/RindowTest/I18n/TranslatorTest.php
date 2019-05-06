@@ -24,7 +24,8 @@ class TranslatorTest extends TestCase
     public function setUp()
     {
         usleep( RINDOW_TEST_CLEAR_CACHE_INTERVAL );
-        \Rindow\Stdlib\Cache\CacheFactory::clearCache();
+        $factory = new \Rindow\Stdlib\Cache\ConfigCache\ConfigCacheFactory();
+        $factory->create('',$forceFileCache=true)->clear();
         usleep( RINDOW_TEST_CLEAR_CACHE_INTERVAL );
     }
 

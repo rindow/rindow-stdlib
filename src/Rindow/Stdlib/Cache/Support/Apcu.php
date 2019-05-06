@@ -1,5 +1,5 @@
 <?php
-namespace Rindow\Stdlib\Cache;
+namespace Rindow\Stdlib\Cache\Support;
 
 class Apcu
 {
@@ -32,5 +32,10 @@ class Apcu
     public function delete($key)
     {
         return apcu_delete($key);
+    }
+
+    public function clear($cache_type='')
+    {
+        return apcu_clear_cache();
     }
 }

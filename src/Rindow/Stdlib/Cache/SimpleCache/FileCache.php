@@ -95,7 +95,7 @@ class FileCache implements Cache
         }
         $item = require $filename;
         if(!is_array($item))
-            throw new DomainException('Invalid cache item format.');
+            throw new CacheException('Invalid cache item format.');
         list($timeout,$value) = $item;
         $this->lastTimeout = $timeout;
         if($timeout && $now>=$timeout) {
@@ -121,8 +121,6 @@ class FileCache implements Cache
         else
             $timeout = null;
         $code = "<?php\nreturn unserialize('".str_replace(array('\\','\''), array('\\\\','\\\''), serialize(array($timeout,$value)))."');";
-        //$code = "<?php\nreturn unserialize(\"".str_replace(array("\\","\0","\"","\n","\r","\t"), array("\\\\","\\0","\\\"","\\n","\\r","\\t"), serialize($value))."\");";
-        //$code = "<?php\nreturn unserialize(base64_decode('".base64_encode(serialize($value))."'));";
         $filename = $this->cachePath . '/' . $this->transFromOffsetToPath($key) . '.php';
         if(!is_dir(dirname($filename))) {
             $dirname = dirname($filename);

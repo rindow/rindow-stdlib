@@ -6,15 +6,10 @@ php:
     - '7.2'
     - '7.3'
 
-env:
-  - POSTGRESQL_VERSION=9.2
-
 matrix:
   include:
     - php: '5.3'
       dist: precise
-      env:
-      - POSTGRESQL_VERSION=9.1
     - php: '5.4'
       dist: trusty
     - php: '5.5'
@@ -22,15 +17,8 @@ matrix:
     - php: '7.0'
       dist: trusty
 
-services:
-  - mongodb
-
 before_install:
   - phpenv config-add tests/travis/php$TRAVIS_PHP_VERSION.ini
-  - sudo /etc/init.d/postgresql stop
-  - sudo chmod 777 /etc/postgresql/$POSTGRESQL_VERSION/main/postgresql.conf
-  - sudo echo "max_prepared_transactions=1" >> /etc/postgresql/$POSTGRESQL_VERSION/main/postgresql.conf
-  - sudo /etc/init.d/postgresql restart
 
 install:
   - export TRAVIS_PHP_VERSION; sh tests/travis/install-script.sh

@@ -3,6 +3,6 @@ namespace Rindow\Stdlib\Cache\Exception;
 
 use Psr\SimpleCache\CacheException as CacheExceptionInterface;
 
-class CacheException
+class CacheException extends \DomainException
 implements CacheExceptionInterface,ExceptionInterface
 {}

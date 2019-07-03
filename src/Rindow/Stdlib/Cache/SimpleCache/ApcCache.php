@@ -15,7 +15,9 @@ class ApcCache implements Cache
 
     public function __construct($config=null)
     {
-        if(extension_loaded('apcu'))
+        if(PHP_SAPI=='cli'&&!ini_get('apc.enable_cli'))
+            $this->apc = null;
+        elseif(extension_loaded('apcu'))
             $this->apc = new Apcu();
         elseif(extension_loaded('apc'))
             $this->apc = new Apc();
@@ -41,7 +43,7 @@ class ApcCache implements Cache
     protected function assertApcLoaded()
     {
         if($this->apc==null)
-            throw new Exception\DomainException('apc or apcu extension is not loaded.');
+            throw new CacheException('apc or apcu extension is not loaded. Or apc.cli_enable is 0');
     }
 
     public function get($key,$default=null)
@@ -49,7 +51,7 @@ class ApcCache implements Cache
         $this->assertApcLoaded();
         if(!is_string($key) && !is_numeric($key))
             throw new InvalidArgumentException('Key must be string.');
-            
+
         $success = false;
         $value = $this->apc->fetch($key,$success);
         if(!$success)

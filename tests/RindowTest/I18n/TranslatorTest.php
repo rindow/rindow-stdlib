@@ -78,6 +78,10 @@ class TranslatorTest extends TestCase
 
     public function testOnModule()
     {
+        if(defined('TRAVIS_SKIP_TEST')) {
+            $this->markTestSkipped('TRAVIS_SKIP_TEST');
+            return;
+        }
         $config = array(
             'module_manager' => array(
                 'modules' => array(
